@@ -22,7 +22,7 @@ import java.util.Queue;
 
 /**
  *
- * @author Len Payne <len.payne@lambtoncollege.ca>
+ * @author Steven Lambe <firrae@gmail.com>
  */
 public class OrderQueue {
     Queue<Order> orderQueue = new ArrayDeque<>();

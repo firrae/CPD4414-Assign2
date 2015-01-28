@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Len Payne <len.payne@lambtoncollege.ca>
+ * @author Steven Lambe <firrae@gmail.com>
  */
 public class OrderQueueTest {
     

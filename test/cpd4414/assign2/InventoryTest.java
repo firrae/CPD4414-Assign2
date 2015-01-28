@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Len Payne <len.payne@lambtoncollege.ca>
+ * @author Steven Lambe <firrae@gmail.com>
  */
 public class InventoryTest {
     
