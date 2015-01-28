@@ -56,8 +56,8 @@ public class OrderQueueTest {
     public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() {
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("CUST00001", "ABC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase(4, 450));
+        order.addPurchase(new Purchase(6, 250));
         orderQueue.add(order);
         
         long expResult = new Date().getTime();
@@ -71,8 +71,8 @@ public class OrderQueueTest {
         
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("", "");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase(4, 450));
+        order.addPurchase(new Purchase(6, 250));
         try {
             orderQueue.add(order);
         }
@@ -105,13 +105,13 @@ public class OrderQueueTest {
         OrderQueue orderQueue = new OrderQueue();
         
         Order order = new Order("CUST00001", "ABC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase(4, 450));
+        order.addPurchase(new Purchase(6, 250));
         orderQueue.add(order);
         
         Order order2 = new Order("CUST00002", "ABD Construction");
-        order2.addPurchase(new Purchase("PROD0004", 450));
-        order2.addPurchase(new Purchase("PROD0006", 250));
+        order2.addPurchase(new Purchase(4, 450));
+        order2.addPurchase(new Purchase(6, 250));
         orderQueue.add(order2);
         
         Order expResult = order;
@@ -130,4 +130,37 @@ public class OrderQueueTest {
         assertEquals(expResult, result);
     }
     
+    @Test
+    public void testWhenProductIsProcessedAndHasTimeRecievedThatProcessedTimeIsSetToTheCurrentTime() {
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase(1, 1));
+        order.addPurchase(new Purchase(2, 1));
+        orderQueue.add(order);
+        
+        orderQueue.processOrder(orderQueue.nextOrder());
+        
+        long expResult = new Date().getTime();
+        long result = order.getTimeProcessed().getTime();
+        assertTrue(Math.abs(result - expResult) < 1000);
+    }
+    
+    @Test
+    public void testWhenProductIsProcessedAndDoesNotTimeRecievedThatThrowsAnError() {
+        boolean win = false;
+        
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase(1, 1));
+        order.addPurchase(new Purchase(2, 1));
+        
+        try {
+            orderQueue.processOrder(order);
+        }
+        catch(Exception err) {
+            win = true;
+        }
+        
+        assertTrue(win);
+    }
 }

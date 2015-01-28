@@ -56,4 +56,28 @@ public class OrderQueue {
             return orderQueue.peek();
         }
     }
+    
+    public void processOrder(Order order) {
+        boolean inStock = true;
+        
+        if(order.getTimeReceived() != null)
+        {
+            for(int i = 0; i < order.getListOfPurchases().size(); i++)
+            {
+                if(order.getListOfPurchases().get(i).getQuantity() > Inventory.getQuantityForId(order.getListOfPurchases().get(i).getProductId()))
+                {
+                    inStock = false;
+                }
+            }
+            
+            if(inStock)
+            {
+                order.setTimeProcessed(new Date());
+            }
+        }
+        else
+        {
+            throw new IllegalStateException("An order must have a time recieved to be processed.");
+        }
+    }
 }
