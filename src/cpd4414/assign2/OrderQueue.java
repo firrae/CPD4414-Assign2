@@ -28,7 +28,32 @@ public class OrderQueue {
     Queue<Order> orderQueue = new ArrayDeque<>();
     
     public void add(Order order) {
-        orderQueue.add(order);
-        order.setTimeReceived(new Date());
+        if(order.getCustomerId() == "" && order.getCustomerName() == "")
+        {
+            throw new IllegalStateException("Customer must have a name and an ID.");
+        }
+        else
+        {
+            if(order.getListOfPurchases().isEmpty())
+            {
+                throw new IllegalStateException("An order must have a list of purchases.");
+            }
+            else
+            {
+                order.setTimeReceived(new Date());
+                orderQueue.add(order);
+            }
+        }
+    }
+    
+    public Order nextOrder() {
+        if(orderQueue.isEmpty())
+        {
+            return null;
+        }
+        else
+        {
+            return orderQueue.peek();
+        }
     }
 }

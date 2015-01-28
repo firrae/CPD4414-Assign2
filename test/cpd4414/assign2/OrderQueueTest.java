@@ -65,4 +65,69 @@ public class OrderQueueTest {
         assertTrue(Math.abs(result - expResult) < 1000);
     }
     
+    @Test
+    public void testWhenCustomerDoesNotExistAndPurchasesDoesNotExistThenThrowError() {
+        boolean win = false;
+        
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("", "");
+        order.addPurchase(new Purchase("PROD0004", 450));
+        order.addPurchase(new Purchase("PROD0006", 250));
+        try {
+            orderQueue.add(order);
+        }
+        catch(Exception err) {
+            win = true;
+        }
+        
+        assertTrue(win);
+    }
+    
+    @Test
+    public void testWhenOrderDoesNotContainListOfPurchasesThenThrowError() {
+        boolean win = false;
+        
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        
+        try {
+            orderQueue.add(order);
+        }
+        catch(Exception err) {
+            win = true;
+        }
+        
+        assertTrue(win);
+    }
+    
+    @Test
+    public void testWhenAskedForNextOrderThatNextOrderIsGiven() {
+        OrderQueue orderQueue = new OrderQueue();
+        
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase("PROD0004", 450));
+        order.addPurchase(new Purchase("PROD0006", 250));
+        orderQueue.add(order);
+        
+        Order order2 = new Order("CUST00002", "ABD Construction");
+        order2.addPurchase(new Purchase("PROD0004", 450));
+        order2.addPurchase(new Purchase("PROD0006", 250));
+        orderQueue.add(order2);
+        
+        Order expResult = order;
+        Order result = orderQueue.nextOrder();
+        
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testWhenAskedForNextOrderAndNoOrdersLeftReturnNull() {
+        OrderQueue orderQueue = new OrderQueue();
+        
+        Order expResult = null;
+        Order result = orderQueue.nextOrder();
+        
+        assertEquals(expResult, result);
+    }
+    
 }
