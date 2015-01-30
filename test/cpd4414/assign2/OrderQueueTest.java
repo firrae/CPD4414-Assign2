@@ -220,4 +220,56 @@ public class OrderQueueTest {
         
         assertTrue(win);
     }
+    
+    @Test
+    public void testWhenOrderQueueIsEmptyThatReportReturnsAnEmptyString() {
+        OrderQueue orderQueue = new OrderQueue();
+        
+        String expResult = "";
+        String result = orderQueue.orderReport();
+        
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testWhenOrderQueueHasOrdersThatReportReturnsStringOfOrdersInJSONFormat() {
+        OrderQueue orderQueue = new OrderQueue();
+        
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase(4, 450));
+        orderQueue.add(order);
+        
+        Order order2 = new Order("CUST00002", "ABD Construction");
+        order2.addPurchase(new Purchase(4, 450));
+        orderQueue.add(order2);
+        
+        Date currentDate = new Date();
+        
+        String expResult =  "{ \"orders\" : [\n" +
+                                " { \"customerId\" : \"CUST00001\",\n" +
+                                " \"customerName\" : \"ABC Construction\",\n" +
+                                " \"timeReceived\" : \"" + currentDate + "\",\n" +
+                                " \"timeProcessed\" : \"" + currentDate + "\",\n" +
+                                " \"timeFulfilled\" : \"" + currentDate + "\",\n" +
+                                " \"purchases\" : [\n" +
+                                " { \"productId\" : 4, \"quantity\" : 450 }\n" +
+                                " ],\n" +
+                                " \"notes\" : \"\"\n" +
+                                " },\n" +
+                                " { \"customerId\" : \"CUST00002\",\n" +
+                                " \"customerName\" : \"ABD Construction\",\n" +
+                                " \"timeReceived\" : \"" + currentDate + "\",\n" +
+                                " \"timeProcessed\" : \"" + currentDate + "\",\n" +
+                                " \"timeFulfilled\" : \"" + currentDate + "\",\n" +
+                                " \"purchases\" : [\n" +
+                                " { \"productId\" : 4, \"quantity\" : 450 },\n" +
+                                " ],\n" +
+                                " \"notes\" : \"\"\n" +
+                                " }\n" +
+                            "] }";
+        
+        String result = orderQueue.orderReport();
+        
+        assertEquals(expResult, result);
+    }
 }

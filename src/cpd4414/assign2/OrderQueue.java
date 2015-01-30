@@ -17,7 +17,9 @@
 package cpd4414.assign2;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -104,6 +106,51 @@ public class OrderQueue {
         {
             throw new IllegalStateException("An order must have a time recieved to be fulfilled.");
         }
+    }
+    
+    public String orderReport() {
+        String report = "";
+        
+        if(orderQueue.isEmpty())
+        {
+            report = "";
+        }
+        else
+        {
+            List<Order> orderList = new ArrayList<>();
+            
+            report = "{ \"orders\" : [\n";
+            
+            while(orderQueue.peek() != null)
+            {
+                Order order = orderQueue.peek();
+                
+                report += "{ \"customerId\" : \"" + order.getCustomerId() + "\",\n";
+                report += "  \"customerName\" : \"" + order.getCustomerName() + "\",\n";
+                report += "  \"timeRecieved\" : \"" + order.getTimeReceived().toString() + "\",\n";
+                report += "  \"timeProcessed\" : \"" + order.getTimeProcessed().toString() + "\",\n";
+                report += "  \"timeFulfilled\" : \"" + order.getTimeFulfilled().toString() + "\",\n";
+                report += "  \"purchases\" : [ \n";
+                
+                for(int i = 0; i < order.getListOfPurchases().size(); i++)
+                {
+                    report += "    { \"productId\" : " + order.getListOfPurchases().get(i).getProductId() + ", \"quantity\" : " + order.getListOfPurchases().get(i).getQuantity() + " }\n";
+                }
+                
+                report += "], \n \"notes\" : " + order.getNotes() + "\n }";
+                
+                orderList.add(order);
+                
+                if(orderQueue.poll() != null)
+                {
+                    report += ",";
+                }
+            }
+            
+            report += "]}";
+        }
+        
+        return report;
     }
     
     /**

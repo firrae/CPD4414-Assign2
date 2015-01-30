@@ -31,7 +31,7 @@ public class Order {
     private Date timeProcessed;
     private Date timeFulfilled;
     private List<Purchase> listOfPurchases = new ArrayList<>();
-    private String notes;
+    private String notes = "";
     
     public Order(String customerId, String customerName) {
         this.customerId = customerId;
