@@ -163,4 +163,61 @@ public class OrderQueueTest {
         
         assertTrue(win);
     }
+    
+    @Test
+    public void testWhenProductIsFulfilledAndHasTimeProcessedThatTimeFulfilledIsSetToTheCurrentTime() {
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase(1, 1));
+        order.addPurchase(new Purchase(2, 1));
+        orderQueue.add(order);
+        
+        orderQueue.processOrder(orderQueue.nextOrder());
+        orderQueue.fulfillOrder(orderQueue.nextOrder());
+        
+        long expResult = new Date().getTime();
+        long result = order.getTimeFulfilled().getTime();
+        assertTrue(Math.abs(result - expResult) < 1000);
+    }
+    
+    @Test
+    public void testWhenProductIsFulfilledAndDoesNotTimeProcessedThatThrowsAnError() {
+        boolean win = false;
+        
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase(1, 1));
+        order.addPurchase(new Purchase(2, 1));
+        orderQueue.add(order);
+        
+        try {
+            orderQueue.fulfillOrder(orderQueue.nextOrder());
+        }
+        catch(Exception err) {
+            win = true;
+        }
+        
+        assertTrue(win);
+    }
+    
+    @Test
+    public void testWhenProductIsFulfilledAndDoesNotTimeRecievedThatThrowsAnError() {
+        boolean win = false;
+        
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase(1, 1));
+        order.addPurchase(new Purchase(2, 1));
+        
+        
+        try {
+            orderQueue.processOrder(order);
+            orderQueue.fulfillOrder(orderQueue.nextOrder());
+        }
+        catch(Exception err) {
+            win = true;
+        }
+        
+        assertTrue(win);
+    }
 }

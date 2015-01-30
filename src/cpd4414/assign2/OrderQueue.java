@@ -64,10 +64,7 @@ public class OrderQueue {
         {
             for(int i = 0; i < order.getListOfPurchases().size(); i++)
             {
-                if(order.getListOfPurchases().get(i).getQuantity() > Inventory.getQuantityForId(order.getListOfPurchases().get(i).getProductId()))
-                {
-                    inStock = false;
-                }
+                inStock = checkStock(order.getListOfPurchases().get(i).getQuantity(), order.getListOfPurchases().get(i).getProductId());
             }
             
             if(inStock)
@@ -79,5 +76,50 @@ public class OrderQueue {
         {
             throw new IllegalStateException("An order must have a time recieved to be processed.");
         }
+    }
+    
+    public void fulfillOrder(Order order) {
+        boolean inStock = true;
+        
+        if(order.getTimeReceived() != null)
+        {
+            if(order.getTimeProcessed() != null)
+            {
+                for(int i = 0; i < order.getListOfPurchases().size(); i++)
+                {
+                    inStock = checkStock(order.getListOfPurchases().get(i).getQuantity(), order.getListOfPurchases().get(i).getProductId());
+                }
+
+                if(inStock)
+                {
+                    order.setTimeFulfilled(new Date());
+                }
+            }
+            else
+            {
+                throw new IllegalStateException("An order must have a time processed to be fulfilled.");
+            }
+        }
+        else
+        {
+            throw new IllegalStateException("An order must have a time recieved to be fulfilled.");
+        }
+    }
+    
+    /**
+     * Utility function to determine if an item in in stock according to the ordered amount.
+     * @param orderedAmount the amount of the item ordered
+     * @param itemID the ID of the ordered item
+     * @return true if the item is in stock, false if it is not.
+     */
+    public boolean checkStock(int orderedAmount, int itemID) {
+        boolean inStock = true;
+        
+        if(orderedAmount > Inventory.getQuantityForId(itemID))
+        {
+            inStock = false;
+        }
+        
+        return inStock;
     }
 }
